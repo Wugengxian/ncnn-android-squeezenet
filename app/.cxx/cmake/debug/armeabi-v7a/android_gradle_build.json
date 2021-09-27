@@ -1,0 +1,54 @@
+{
+  "stringTable": {
+    "0": "G:/cs/ncnn-android-squeezenet/app/.cxx/cmake/debug/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi24 --gcc-toolchain=C:/Users/rain/AppData/Local/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/rain/AppData/Local/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dsqueezencnn_EXPORTS -isystem G:/cs/ncnn-android-squeezenet/app/src/main/jni/ncnn-20210720-android-vulkan/armeabi-v7a/include/ncnn -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -march=armv7-a -mthumb -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC -fno-rtti -fno-exceptions"
+  },
+  "buildFiles": [
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\OGLCompilerTargets.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\glslangTargets.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\glslangTargets-release.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\OSDependentTargets.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\OGLCompilerTargets-release.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\CMakeLists.txt",
+    "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\compiler_id.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\SPIRVTargets-release.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\ncnn\\ncnnConfig.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\OSDependentTargets-release.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\ncnn\\ncnn-release.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\ncnn\\ncnn.cmake",
+    "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\android.toolchain.cmake",
+    "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\platforms.cmake",
+    "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\ncnn-20210720-android-vulkan\\armeabi-v7a\\lib\\cmake\\SPIRVTargets.cmake"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "squeezencnn-Debug-armeabi-v7a": {
+      "buildCommand": "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\" squeezencnn",
+      "buildType": "debug",
+      "toolchain": "3245460034",
+      "abi": "armeabi-v7a",
+      "artifactName": "squeezencnn",
+      "files": [
+        {
+          "src": "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\squeezencnn_jni.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "G:\\cs\\ncnn-android-squeezenet\\app\\build\\intermediates\\cmake\\debug\\obj\\armeabi-v7a\\libsqueezencnn.so"
+    }
+  },
+  "toolchains": {
+    "3245460034": {
+      "cppCompilerExecutable": "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

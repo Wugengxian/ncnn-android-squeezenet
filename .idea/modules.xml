@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ncnn-android-squeezenet.iml" filepath="$PROJECT_DIR$/.idea/modules/ncnn-android-squeezenet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ncnn-android-squeezenet.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ncnn-android-squeezenet.app.iml" />
+    </modules>
+  </component>
+</project>

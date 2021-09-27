@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,17 +71,18 @@ public class MainActivity extends Activity
             public void onClick(View arg0) {
                 if (yourSelectedImage == null)
                     return;
-
-                String result = squeezencnn.Detect(yourSelectedImage, false);
-
-                if (result == null)
-                {
-                    infoResult.setText("detect failed");
-                }
-                else
-                {
-                    infoResult.setText(result);
-                }
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                new Thread(new Runnable() {
+                    public void run() {
+                        final Bitmap styledImage = Segmentation(false, true);
+                        imageView.post(new Runnable() {
+                            public void run() {
+                                imageView.setImageBitmap(styledImage);
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            }
+                        });
+                    }
+                }).start();
             }
         });
 
@@ -91,18 +93,49 @@ public class MainActivity extends Activity
                 if (yourSelectedImage == null)
                     return;
 
-                String result = squeezencnn.Detect(yourSelectedImage, true);
-
-                if (result == null)
-                {
-                    infoResult.setText("detect failed");
-                }
-                else
-                {
-                    infoResult.setText(result);
-                }
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                new Thread(new Runnable() {
+                    public void run() {
+                        final Bitmap styledImage = Segmentation(true, true);
+                        imageView.post(new Runnable() {
+                            public void run() {
+                                imageView.setImageBitmap(styledImage);
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            }
+                        });
+                    }
+                }).start();
             }
         });
+
+        Button buttonDetectint8 = (Button) findViewById(R.id.int8buttonDetect);
+        buttonDetectint8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (yourSelectedImage == null)
+                    return;
+
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                new Thread(new Runnable() {
+                    public void run() {
+                        final Bitmap styledImage = Segmentation(false, false);
+                        imageView.post(new Runnable() {
+                            public void run() {
+                                imageView.setImageBitmap(styledImage);
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
+    }
+
+    private Bitmap Segmentation(boolean use_gpu, boolean int8)
+    {
+        Bitmap styledImage = yourSelectedImage.copy(Bitmap.Config.ARGB_8888, true);
+        infoResult.setText(squeezencnn.Detect(styledImage, use_gpu, int8));
+        return styledImage;
     }
 
     @Override
@@ -120,11 +153,7 @@ public class MainActivity extends Activity
 
                     Bitmap rgba = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-                    // resize to 227x227
-                    yourSelectedImage = Bitmap.createScaledBitmap(rgba, 227, 227, false);
-
-                    rgba.recycle();
-
+                    yourSelectedImage = rgba;
                     imageView.setImageBitmap(bitmap);
                 }
             }

@@ -1,0 +1,7 @@
+Executable : C:\Users\rain\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
+arguments : 
+-C
+G:\cs\ncnn-android-squeezenet\app\.cxx\cmake\debug\armeabi-v7a
+squeezencnn
+jvmArgs : 
+

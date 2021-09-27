@@ -1,0 +1,70 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "G:\\cs\\ncnn-android-squeezenet",
+      "sdkFolder": "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\build\\intermediates",
+      "gradleModulePathName": ":app",
+      "moduleRootFolder": "G:\\cs\\ncnn-android-squeezenet\\app",
+      "makeFile": "G:\\cs\\ncnn-android-squeezenet\\app\\src\\main\\jni\\CMakeLists.txt",
+      "buildSystem": "CMAKE",
+      "compilerSettingsCacheFolder": "G:\\cs\\ncnn-android-squeezenet\\.cxx",
+      "cxxFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx",
+      "ndkFolder": "C:\\Users\\rain\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670",
+      "ndkVersion": "22.1.7171670",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\build\\intermediates\\cmake\\debug\\lib",
+    "objFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\build\\intermediates\\cmake\\debug\\obj",
+    "jsonFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug",
+    "gradleBuildOutputFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARMEABI_V7A",
+  "abiPlatformVersion": 24,
+  "cxxBuildFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a",
+  "jsonFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\android_gradle_build.json",
+  "gradleBuildOutputFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a",
+  "objFolder": "G:\\cs\\ncnn-android-squeezenet\\app\\build\\intermediates\\cmake\\debug\\obj\\armeabi-v7a",
+  "buildCommandFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\build_command.txt",
+  "buildOutputFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\build_output.txt",
+  "modelOutputFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\build_model.json",
+  "cmake": {
+    "cmakeListsWrapperFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\CMakeLists.txt",
+    "toolchainWrapperFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\android_gradle_build.toolchain.cmake",
+    "buildGenerationStateFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\build_generation_state.json",
+    "cacheKeyFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\compiler_cache_key.json",
+    "compilerCacheUseFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\compiler_cache_use.json",
+    "compilerCacheWriteFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\compiler_cache_write.json",
+    "toolchainSettingsFromCacheFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cxx\\debug\\armeabi-v7a\\compiler_settings_cache.cmake",
+    "cmakeWrappingBaseFolder": "."
+  },
+  "jsonGenerationLoggingRecordFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\json_generation_record.json",
+  "compileCommandsJsonFile": "G:\\cs\\ncnn-android-squeezenet\\app\\.cxx\\cmake\\debug\\armeabi-v7a\\compile_commands.json"
+}

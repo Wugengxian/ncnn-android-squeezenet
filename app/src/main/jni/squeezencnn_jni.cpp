@@ -30,17 +30,15 @@
 static ncnn::UnlockedPoolAllocator g_blob_pool_allocator;
 static ncnn::PoolAllocator g_workspace_pool_allocator;
 
-static std::vector<std::string> squeezenet_words;
 static ncnn::Net squeezenet;
+static ncnn::Net squeezenetint8;
 
-static std::vector<std::string> split_string(const std::string& str, const std::string& delimiter)
-{
+static std::vector<std::string> split_string(const std::string &str, const std::string &delimiter) {
     std::vector<std::string> strings;
 
     std::string::size_type pos = 0;
     std::string::size_type prev = 0;
-    while ((pos = str.find(delimiter, prev)) != std::string::npos)
-    {
+    while ((pos = str.find(delimiter, prev)) != std::string::npos) {
         strings.push_back(str.substr(prev, pos - prev));
         prev = pos + 1;
     }
@@ -53,8 +51,7 @@ static std::vector<std::string> split_string(const std::string& str, const std::
 
 extern "C" {
 
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
-{
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "JNI_OnLoad");
 
     ncnn::create_gpu_instance();
@@ -62,16 +59,15 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
     return JNI_VERSION_1_4;
 }
 
-JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
-{
+JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "JNI_OnUnload");
 
     ncnn::destroy_gpu_instance();
 }
 
 // public native boolean Init(AssetManager mgr);
-JNIEXPORT jboolean JNICALL Java_com_tencent_squeezencnn_SqueezeNcnn_Init(JNIEnv* env, jobject thiz, jobject assetManager)
-{
+JNIEXPORT jboolean JNICALL
+Java_com_tencent_squeezencnn_SqueezeNcnn_Init(JNIEnv *env, jobject thiz, jobject assetManager) {
     ncnn::Option opt;
     opt.lightmode = true;
     opt.num_threads = 4;
@@ -82,15 +78,16 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_squeezencnn_SqueezeNcnn_Init(JNIEnv*
     if (ncnn::get_gpu_count() != 0)
         opt.use_vulkan_compute = true;
 
-    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+    AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
 
     squeezenet.opt = opt;
+    squeezenetint8.opt = opt;
 
     // init param
     {
-        int ret = squeezenet.load_param_bin(mgr, "squeezenet_v1.1.param.bin");
-        if (ret != 0)
-        {
+        int ret = squeezenet.load_param(mgr, "icnet.param");
+        squeezenetint8.load_param(mgr, "icnet-int8.param");
+        if (ret != 0) {
             __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "load_param_bin failed");
             return JNI_FALSE;
         }
@@ -98,111 +95,116 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_squeezencnn_SqueezeNcnn_Init(JNIEnv*
 
     // init bin
     {
-        int ret = squeezenet.load_model(mgr, "squeezenet_v1.1.bin");
-        if (ret != 0)
-        {
+        int ret = squeezenet.load_model(mgr, "icnet.bin");
+        squeezenetint8.load_model(mgr, "icnet-int8.bin");
+        if (ret != 0) {
             __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "load_model failed");
             return JNI_FALSE;
         }
     }
 
-    // init words
-    {
-        AAsset* asset = AAssetManager_open(mgr, "synset_words.txt", AASSET_MODE_BUFFER);
-        if (!asset)
-        {
-            __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "open synset_words.txt failed");
-            return JNI_FALSE;
-        }
-
-        int len = AAsset_getLength(asset);
-
-        std::string words_buffer;
-        words_buffer.resize(len);
-        int ret = AAsset_read(asset, (void*)words_buffer.data(), len);
-
-        AAsset_close(asset);
-
-        if (ret != len)
-        {
-            __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "read synset_words.txt failed");
-            return JNI_FALSE;
-        }
-
-        squeezenet_words = split_string(words_buffer, "\n");
-    }
-
     return JNI_TRUE;
 }
 
-// public native String Detect(Bitmap bitmap, boolean use_gpu);
-JNIEXPORT jstring JNICALL Java_com_tencent_squeezencnn_SqueezeNcnn_Detect(JNIEnv* env, jobject thiz, jobject bitmap, jboolean use_gpu)
-{
-    if (use_gpu == JNI_TRUE && ncnn::get_gpu_count() == 0)
-    {
-        return env->NewStringUTF("no vulkan capable gpu");
-    }
+void draw_objects(JNIEnv *env, ncnn::Mat map, jobject bgr) {
+    AndroidBitmapInfo bmpInfo = {0};
+    if (AndroidBitmap_getInfo(env, bgr, &bmpInfo) < 0)
+        return;
+    int *dataFromBmp = NULL;
+    if (AndroidBitmap_lockPixels(env, bgr, (void **) &dataFromBmp))
+        return;
 
-    double start_time = ncnn::get_current_time();
+    const uint8_t color[] = {128, 255, 128, 244, 35, 232};
+    const uint8_t color_count = sizeof(color) / sizeof(int);
+    int alpha = 0xFF << 24;
+    int width = map.w;
+    int height = map.h;
+    int size = map.c;
+    int img_index2 = 0;
+    float threshold = 0.45;
+    const float *ptr2 = map;
+    int red;
+    int green;
+    int blue;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            float maxima = threshold;
+            int index = -1;
+            for (int c = 0; c < size; c++) {
+                //const float* ptr3 = map.channel(c);
+                const float *ptr3 = ptr2 + c * width * height;
+                if (ptr3[img_index2] > maxima) {
+                    maxima = ptr3[img_index2];
+                    index = c;
+                }
+            }
+            if (index > -1) {
+                int color_index = (index) * 3;
+                if (color_index < color_count) {
+                    uint8_t b = color[color_index];
+                    uint8_t g = color[color_index + 1];
+                    uint8_t r = color[color_index + 2];
+                    int color = dataFromBmp[img_index2];
+                    red = ((color & 0x00FF0000) >> 17) + (r>>1);
+                    green = ((color & 0x0000FF00) >> 9) + (g>>1);
+                    blue = ((color & 0x000000FF) >> 1) + (b>>1);
+                    dataFromBmp[img_index2] = alpha | (red << 16) | (green << 8) | blue;
+                }
+            }
+            img_index2++;
+        }
+    }
+    AndroidBitmap_unlockPixels(env,bgr);
+}
+
+// public native String Detect(Bitmap bitmap, boolean use_gpu);
+JNIEXPORT jstring JNICALL
+Java_com_tencent_squeezencnn_SqueezeNcnn_Detect(JNIEnv *env, jobject thiz, jobject bitmap,
+                                                jboolean use_gpu, jboolean int8) {
+    if (use_gpu == JNI_TRUE && ncnn::get_gpu_count() == 0) {
+        return NULL;
+    }
 
     AndroidBitmapInfo info;
     AndroidBitmap_getInfo(env, bitmap, &info);
     int width = info.width;
     int height = info.height;
-    if (width != 227 || height != 227)
-        return NULL;
     if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888)
         return NULL;
 
     // ncnn from bitmap
-    ncnn::Mat in = ncnn::Mat::from_android_bitmap(env, bitmap, ncnn::Mat::PIXEL_BGR);
+    ncnn::Mat in = ncnn::Mat::from_android_bitmap_resize(env, bitmap, ncnn::Mat::PIXEL_BGR, 640, 480);
 
     // squeezenet
+    char *tmp;
     std::vector<float> cls_scores;
     {
         const float mean_vals[3] = {104.f, 117.f, 123.f};
-        in.substract_mean_normalize(mean_vals, 0);
-
+        const float norm_vals[3] = {0.017f, 0.017f, 0.017f};
+        in.substract_mean_normalize(mean_vals, norm_vals);
+        double start_time = ncnn::get_current_time();
         ncnn::Extractor ex = squeezenet.create_extractor();
+        if (int8 == JNI_FALSE) {
+            ex = squeezenetint8.create_extractor();
+        }
 
         ex.set_vulkan_compute(use_gpu);
 
-        ex.input(squeezenet_v1_1_param_id::BLOB_data, in);
+        ex.input("input", in);
 
         ncnn::Mat out;
-        ex.extract(squeezenet_v1_1_param_id::BLOB_prob, out);
+        ex.extract("output", out);
+        double elasped = ncnn::get_current_time() - start_time;
+        __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "%.2fms   detect", elasped);
+        sprintf(tmp, "耗时：%.3f ms", elasped);
+        
+        ncnn::Mat seg_out;
+        ncnn::resize_bilinear(out, seg_out, width, height);
 
-        cls_scores.resize(out.w);
-        for (int j=0; j<out.w; j++)
-        {
-            cls_scores[j] = out[j];
-        }
+        draw_objects(env, seg_out, bitmap);
     }
-
-    // return top class
-    int top_class = 0;
-    float max_score = 0.f;
-    for (size_t i=0; i<cls_scores.size(); i++)
-    {
-        float s = cls_scores[i];
-//         __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "%d %f", i, s);
-        if (s > max_score)
-        {
-            top_class = i;
-            max_score = s;
-        }
-    }
-
-    const std::string& word = squeezenet_words[top_class];
-    char tmp[32];
-    sprintf(tmp, "%.3f", max_score);
-    std::string result_str = std::string(word.c_str() + 10) + " = " + tmp;
-
-    // +10 to skip leading n03179701
+    std::string result_str = tmp;
     jstring result = env->NewStringUTF(result_str.c_str());
-
-    double elasped = ncnn::get_current_time() - start_time;
-    __android_log_print(ANDROID_LOG_DEBUG, "SqueezeNcnn", "%.2fms   detect", elasped);
 
     return result;
 }
